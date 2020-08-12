@@ -6,7 +6,7 @@ metadata:
 spec:
   params:
     - name: image-pull-policy
-      default: "Always"
+      default: Always
     - name: image-version
       default: latest
   resourcetemplates:
