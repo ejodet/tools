@@ -5,6 +5,14 @@ metadata:
   name: do-nothing
 spec:
   params:
+    - name: image-pull-policy
+      description: |
+        the imagePullPolicy to use 
+      default: "Always"
+    - name: image-version
+      description: |
+        the image version to use 
+      default: latest
   workspaces:
     - name: workspace
       description: |
@@ -13,8 +21,8 @@ spec:
       mountPath: /artifacts
   steps:
     - name: fetch-base-image
-      image: ibmcom/pipeline-base-image:2.6
-      imagePullPolicy: "Always"
+      image: ibmcom/pipeline-base-image:$(params.image-version)
+      imagePullPolicy: "$(params.image-pull-policy)"
       script: |
         #!/bin/bash
         set -e -o pipefail
