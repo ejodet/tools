@@ -23,8 +23,13 @@ spec:
     - name: fetch-base-image
       image: ibmcom/pipeline-base-image:$(params.image-version)
       imagePullPolicy: "$(params.image-pull-policy)"
+      env:
+        - name: PULL_POLICY
+          value: $(params.image-pull-policy)
+        - name: IMAGE_VERSION
+          value: $(params.image-version)
       script: |
         #!/bin/bash
         set -e -o pipefail
-        echo  "imagePullPolicy Always - Image fetched!"
+        echo  "imagePullPolicy: $PULL_POLICY - Image version: $IMAGE_VERSION"
         exit 0
