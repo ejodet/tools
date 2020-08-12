@@ -19,7 +19,7 @@ spec:
   steps:
     - name: fetch-base-image
       image: ibmcom/pipeline-base-image:$(params.image-version)
-      imagePullPolicy: $(params.image-pull-policy)
+      imagePullPolicy: Always
       env:
         - name: PULL_POLICY
           value: $(params.image-pull-policy)
