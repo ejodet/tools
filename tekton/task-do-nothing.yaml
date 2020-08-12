@@ -1,0 +1,15 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: do-nothing
+spec:
+  params:
+  steps:
+    - name: fetch-base-image
+      image: ibmcom/pipeline-base-image:2.6
+      imagePullPolicy: "Always"
+      script: |
+        #!/bin/bash
+        set -e -o pipefail
+        exit 0

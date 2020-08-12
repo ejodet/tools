@@ -1,0 +1,30 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-template-do-nothing
+spec:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-do-nothing
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: trigger-binding-do-nothing
+spec:
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: event-listener-do-nothing
+spec:
+  triggers:
+    - binding:
+        name: trigger-binding-do-nothing
+      template:
+        name: trigger-template-do-nothing
