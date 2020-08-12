@@ -15,14 +15,11 @@ spec:
       default: latest
   workspaces:
     - name: workspace
-      description: |
-        A workspace that contain data useful for the script/slack message resolution.
-        Should be marked as optional when Tekton will permit it
       mountPath: /artifacts
   steps:
     - name: fetch-base-image
       image: ibmcom/pipeline-base-image:$(params.image-version)
-      imagePullPolicy: "$(params.image-pull-policy)"
+      imagePullPolicy: $(params.image-pull-policy)
       env:
         - name: PULL_POLICY
           value: $(params.image-pull-policy)
