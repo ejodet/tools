@@ -6,7 +6,9 @@ metadata:
 spec:
   params:
     - name: image-pull-policy
+      default: "Always"
     - name: image-version
+      default: latest
   resourcetemplates:
     # PVC definition like pre-tekton-0.10.1
     - apiVersion: v1
