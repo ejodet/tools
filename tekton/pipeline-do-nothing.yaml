@@ -4,7 +4,14 @@ kind: Pipeline
 metadata:
   name: pipeline-do-nothing
 spec:
+  params:
+  workspaces:
+    - name: pipeline-ws
   tasks:
-    - name: fetch-base-image
+    - name: do-nothing
       taskRef:
         name: do-nothing
+      params:
+      workspaces:
+        - name: workspace
+          workspace: pipeline-ws
