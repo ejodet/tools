@@ -5,8 +5,6 @@ metadata:
   name: pipeline-do-nothing
 spec:
   params:
-    - name: image-pull-policy
-    - name: image-version
   workspaces:
     - name: pipeline-ws
   tasks:
@@ -14,10 +12,6 @@ spec:
       taskRef:
         name: do-nothing
       params:
-        - name: image-pull-policy
-          value: $(params.image-pull-policy)
-        - name: image-version
-          value: $(params.image-version)
       workspaces:
         - name: workspace
           workspace: pipeline-ws
