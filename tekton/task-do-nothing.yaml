@@ -18,4 +18,5 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
+        echo  "imagePullPolicy Always - Image fetched!"
         exit 0
