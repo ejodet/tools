@@ -1,0 +1,59 @@
+version: '1'
+
+setup:
+  image: ibmcom/pipeline-base-image:2.7
+  script: |
+    #!/usr/bin/env bash
+    GIT_TOKEN=$(cat ../git-token)
+    cd ..
+    echo "cloning otc-deploy...."
+    # git clone "https://$GIT_TOKEN@github.ibm.com/org-ids/otc-deploy.git"
+    ls -al
+
+build:
+  image: ibmcom/pipeline-base-image:2.7
+  script: |
+    #!/bin/bash
+    echo ""
+    echo "Using custom build script"
+
+test:
+  image: ibmcom/pipeline-base-image:2.7
+  script: |
+    #!/usr/bin/env bash
+    cd ..
+    ls -al
+
+deploy:
+  image: ibmcom/pipeline-base-image:2.7
+  script: |
+    set -x
+    export IBMCLOUD_API_KEY="$(cat /config/prod-api-key)"
+    export CLUSTER_NAME="$(cat /config/cluster-name)"
+    export NAMESPACE="$(cat /config/dev-cluster-namespace)"
+    export REGION="$(cat /config/dev-region)"
+    export PIPELINE_KUBERNETES_CLUSTER_NAME="$(cat /config/cluster-name)"
+    echo "CLUSTER_NAME: $CLUSTER_NAME"
+    echo "NAMESPACE: $NAMESPACE"
+    echo "REGION: $REGION"
+    echo "IBMCLOUD_API_KEY: $IBMCLOUD_API_KEY"
+    echo "PIPELINE_KUBERNETES_CLUSTER_NAME: $PIPELINE_KUBERNETES_CLUSTER_NAME"
+
+    echo ""
+    echo "Login to IBM Cloud..."
+    ibmcloud login -a "cloud.ibm.com" -r "${REGION}" --apikey "${IBMCLOUD_API_KEY}" -g "default" 
+
+    echo ""
+    echo "Listing clusters..."
+    ibmcloud cs clusters
+    
+    echo ""
+    echo "Attaching to cluster $CLUSTER_NAME"
+    ibmcloud cs cluster config --cluster $CLUSTER_NAME
+    
+
+acceptance-test:
+  image: ibmcom/pipeline-base-image:2.7
+  script: |
+    #!/usr/bin/env bash
+    echo "titi...."
