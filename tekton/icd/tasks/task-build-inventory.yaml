@@ -24,7 +24,7 @@ spec:
     - name: output
       mountPath: /artifacts
   steps:
-    - name: fetch-base-image
+    - name: build-inventory
       image: ibmcom/pipeline-base-image:$(params.image-version)
       imagePullPolicy: Always
       env:
