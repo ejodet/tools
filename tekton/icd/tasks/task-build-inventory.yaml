@@ -60,7 +60,7 @@ spec:
 
         # read the source repo values.yaml
         echo "Analyzing the source repository values.yaml for component $ICD_COMPONENT_NAME"
-        cd $ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
+        cd artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
 
         PROJECTS=$(yq r image_values.yaml --tojson | jq 'to_entries[] | .key')
 
