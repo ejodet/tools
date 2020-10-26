@@ -93,9 +93,9 @@ metadata:
 spec:
   params:
     - name: icd-component-name
-      value: "icd-orchestration"
+      value: 'icd-orchestration'
     - name: icd-configuration-file
-      value: "image_values.yaml"
+      value: 'image_values.yaml'
 ---
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
