@@ -41,8 +41,8 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
-        echo "ls -R artifacts"
-        ls -R artifacts
+        echo "ls -R"
+        ls -R
         echo ""
 
         HOME_DIR=$(pwd)
