@@ -9,7 +9,7 @@ spec:
       description: |
         the image version to use 
       default: "2.9"
-    - name: icd-source-directory
+    - name: icd-source-repository-directory
       description: the ICD source directory 
       default: ibm-cloud-databases
     - name: icd-configuration-file
@@ -18,7 +18,7 @@ spec:
     - name: icd-component-name
       description: the name of the ICD component (database, control-plane, ...)
       default: icd-orchestration
-    - name: target-inventory-directory
+    - name: target-inventory-repository-directory
       description: the target directory where inventory files will be stored
   workspaces:
     - name: output
@@ -31,13 +31,13 @@ spec:
         - name: IMAGE_VERSION
           value: $(params.image-version)
         - name: ICD_SOURCE_DIRECTORY
-          value: $(params.icd-source-directory)
+          value: $(params.icd-source-repository-directory)
         - name: ICD_COMPONENT_NAME
           value: $(params.icd-component-name)
         - name: ICD_CONFIGURATION_FILE
           value: $(params.icd-configuration-file)
         - name: TARGET_INVENTORY_DIRECTORY
-          value: $(params.target-inventory-directory)
+          value: $(params.target-inventory-repository-directory)
       script: |
         #!/bin/bash
         set -e -o pipefail
