@@ -17,7 +17,7 @@ spec:
       default: icd-orchestration
     - name: icd-configuration-file
       description: the configuration file containing the deployment information
-      default: values.yaml
+      default: image_values.yaml
     - name: target-inventory-repository-directory
       description: the target directory where inventory files will be stored
   workspaces:
