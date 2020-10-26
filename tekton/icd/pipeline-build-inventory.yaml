@@ -48,6 +48,9 @@ spec:
     - name: build-inventory
       taskRef:
         name: build-inventory
+      runAfter:
+        - clone-icd-source-repository
+        - clone-target-inventory-repository
       workspaces:
         - name: output
           workspace: pipeline-ws
