@@ -41,10 +41,7 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
-        cd artifacts
-        ls -al
-        cd ..
-
+        
         HOME_DIR=$(pwd)
 
         # TODO: check what the real values should be
@@ -59,8 +56,8 @@ spec:
         GIT_ROOT_URL="https://github.ibm.com/ibm-cloud-databases"
 
         # read the source repo values.yaml
-        echo "Analyzing the source repository values.yaml for component $ICD_COMPONENT_NAME"
-        cd artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
+        echo "Analyzing the source repository $ICD_CONFIGURATION_FILE for component $ICD_COMPONENT_NAME"
+        cd artifacts/$ICD_SOURCE_DIRECTORY/ibm-cloud-databases/$ICD_COMPONENT_NAME
 
         PROJECTS=$(yq r image_values.yaml --tojson | jq 'to_entries[] | .key')
 
