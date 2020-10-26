@@ -12,12 +12,12 @@ spec:
     - name: icd-source-repository-directory
       description: the ICD source directory 
       default: ibm-cloud-databases
-    - name: icd-configuration-file
-      description: the configuration file containing the deployment information
-      default: values.yaml
     - name: icd-component-name
       description: the name of the ICD component (database, control-plane, ...)
       default: icd-orchestration
+    - name: icd-configuration-file
+      description: the configuration file containing the deployment information
+      default: values.yaml
     - name: target-inventory-repository-directory
       description: the target directory where inventory files will be stored
   workspaces:
@@ -41,12 +41,6 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
-        echo "ls -R artifacts"
-        ls -R artifacts
-        echo ""
-        echo "ls -R workspace"
-        ls -R workspace
-        echo ""
 
         HOME_DIR=$(pwd)
 
@@ -63,7 +57,7 @@ spec:
 
         # read the source repo values.yaml
         echo "Analyzing the source repository $ICD_CONFIGURATION_FILE for component $ICD_COMPONENT_NAME"
-        cd artifacts/$ICD_SOURCE_DIRECTORY/ibm-cloud-databases/$ICD_COMPONENT_NAME
+        cd artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
 
         PROJECTS=$(yq r image_values.yaml --tojson | jq 'to_entries[] | .key')
 
