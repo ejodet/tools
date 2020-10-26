@@ -33,6 +33,8 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
+        pwd
+        ls -al
 
         source ../../scripts/build-inventory.sh
         exit 0
