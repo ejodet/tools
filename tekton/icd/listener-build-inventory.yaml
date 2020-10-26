@@ -9,10 +9,14 @@ spec:
       description: the ICD source repository
     - name: icd-source-repository-branch
       description: the branch for the git repo
+    - name: icd-source-repository-directory
+      description: name of the new directory to clone into
     - name: target-inventory-repository
       description: the target repository where inventory files will be stored
     - name: target-inventory-repository-branch
       description: the branch for the git repo
+    - name: target-inventory-repository-directory
+      description: name of the new directory to clone into
     - name: pipeline-debug
       default: "0"
   resourcetemplates:
