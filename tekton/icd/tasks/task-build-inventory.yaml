@@ -21,7 +21,7 @@ spec:
     - name: target-inventory-repository
       description: the target repository where inventory files will be stored
   workspaces:
-    - name: workspace
+    - name: output
       mountPath: /artifacts
   steps:
     - name: fetch-base-image
