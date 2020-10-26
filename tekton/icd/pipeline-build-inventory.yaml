@@ -10,10 +10,14 @@ spec:
       default: https://github.ibm.com/ibm-cloud-databases/ibm-cloud-databases
     - name: icd-source-repository-branch
       description: the branch for the git repo
+    - name: icd-source-repository-directory
+      description: name of the new directory to clone into
     - name: target-inventory-repository
       description: the target repository where inventory files will be stored
     - name: target-inventory-repository-branch
       description: the branch for the git repo
+    - name: target-inventory-repository-directory
+      description: name of the new directory to clone into
     - name: pipeline-debug
       default: "0"
   workspaces:
@@ -30,6 +34,8 @@ spec:
           value: $(params.icd-source-repository)
         - name: branch
           value: $(params.icd-source-repository-branch)
+        - name: directory-name
+          value: $(params.icd-source-repository-directory)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
     - name: clone-target-inventory-repository
@@ -43,6 +49,8 @@ spec:
           value: $(params.target-inventory-repository)
         - name: branch
           value: $(params.target-inventory-repository-branch)
+        - name: directory-name
+          value: $(params.target-inventory-repository-directory)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
     - name: build-inventory
