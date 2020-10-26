@@ -41,8 +41,13 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
+        echo "artifacts"
+        ls -R artifacts
+        echo ""
 
-        ls -R artifacts/$ICD_SOURCE_DIRECTORY
+        echo "workspace"
+        ls -R workspace
+        echo ""
 
         HOME_DIR=$(pwd)
 
