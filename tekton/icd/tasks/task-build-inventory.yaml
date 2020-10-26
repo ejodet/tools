@@ -1,0 +1,38 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-inventory
+spec:
+  params:
+    - name: image-version
+      description: |
+        the image version to use 
+      default: 2.9
+    - name: icd-source-repository
+      description: the ICD source repository 
+      default: https://github.ibm.com/ibm-cloud-databases/ibm-cloud-databases
+    - name: icd-configuration-file
+      description: the configuration file containing the deployment information
+      default: values.yaml
+    - name: icd-component-name
+      description: the name of the ICD component (database, control-plane, ...)
+      default: icd-orchestration
+    - name: target-inventory-repository
+      description: the target repository where inventory files will be stored
+  workspaces:
+    - name: workspace
+      mountPath: /artifacts
+  steps:
+    - name: fetch-base-image
+      image: ibmcom/pipeline-base-image:$(params.image-version)
+      imagePullPolicy: Always
+      env:
+        - name: IMAGE_VERSION
+          value: $(params.image-version)
+      script: |
+        #!/bin/bash
+        set -e -o pipefail
+
+        source ../../scripts/build-inventory.sh
+        exit 0

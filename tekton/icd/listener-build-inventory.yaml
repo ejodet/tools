@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: trigger-template-do-nothing
+  name: trigger-template-build-inventory
 spec:
   params:
     - name: image-pull-policy
@@ -14,7 +14,7 @@ spec:
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        name: do-nothing-$(uid)-pvc
+        name: build-inventory-$(uid)-pvc
       spec:
         resources:
           requests:
@@ -25,10 +25,10 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        name: do-nothing-$(uid)
+        name: build-inventory-$(uid)
       spec:
         pipelineRef:
-          name: pipeline-do-nothing
+          name: pipeline-build-inventory
         params:
           - name: image-pull-policy
             value: $(params.image-pull-policy)
@@ -37,22 +37,22 @@ spec:
         workspaces:
           - name: pipeline-ws
             persistentVolumeClaim:
-              claimName: do-nothing-$(uid)-pvc
+              claimName: build-inventory-$(uid)-pvc
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
-  name: trigger-binding-do-nothing
+  name: trigger-binding-build-inventory
 spec:
   params:
 ---
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: event-listener-do-nothing
+  name: event-listener-build-inventory
 spec:
   triggers:
     - binding:
-        name: trigger-binding-do-nothing
+        name: trigger-binding-build-inventory
       template:
-        name: trigger-template-do-nothing
+        name: trigger-template-build-inventory
