@@ -63,7 +63,7 @@ spec:
         - name: output
           workspace: pipeline-ws
       params:
-        - name: icd-source-repository
-          value: $(params.icd-source-repository)
-        - name: target-inventory-repository
-          value: $(params.target-inventory-repository)
+        - name: icd-source-directory
+          value: $(params.icd-source-repository-directory)
+        - name: target-inventory-directory
+          value: $(params.target-inventory-repository-directory)
