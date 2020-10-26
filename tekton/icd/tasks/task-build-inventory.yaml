@@ -41,7 +41,9 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
-        
+
+        ls -R artifacts/$ICD_SOURCE_DIRECTORY
+
         HOME_DIR=$(pwd)
 
         # TODO: check what the real values should be
