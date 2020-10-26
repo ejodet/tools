@@ -14,8 +14,6 @@ spec:
       description: the target repository where inventory files will be stored
     - name: target-inventory-repository-branch
       description: the branch for the git repo
-    - name: apikey
-      description: the ibmcloud api key 
     - name: pipeline-debug
       default: "0"
   workspaces:
@@ -32,8 +30,6 @@ spec:
           value: $(params.icd-source-repository)
         - name: branch
           value: $(params.icd-source-repository-branch)
-        - name: apikey
-          value: $(params.apikey)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
     - name: clone-target-inventory-repository
@@ -47,8 +43,6 @@ spec:
           value: $(params.target-inventory-repository)
         - name: branch
           value: $(params.target-inventory-repository-branch)
-        - name: apikey
-          value: $(params.apikey)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
     - name: build-inventory
