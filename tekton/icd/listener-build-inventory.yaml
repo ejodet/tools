@@ -49,10 +49,6 @@ spec:
             value: $(params.icd-source-repository-branch)
           - name: icd-source-repository-directory
             value: $(params.icd-source-repository-directory)
-          - name: icd-component-name
-            value: $(params.icd-component-name)
-          - name: icd-configuration-file
-            value: $(params.icd-configuration-file)
           - name: target-inventory-repository
             value: $(params.target-inventory-repository)
           - name: target-inventory-repository-branch
