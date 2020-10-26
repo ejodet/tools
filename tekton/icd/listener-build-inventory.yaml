@@ -15,9 +15,6 @@ spec:
       description: the branch for the git repo
     - name: apikey
       description: the ibmcloud api key
-    - name: git-access-token
-      description: illustrate alternate way to provide/get git access token
-      default: ""
     - name: pipeline-debug
       default: "0"
   resourcetemplates:
@@ -48,8 +45,8 @@ spec:
             value: $(params.target-inventory-repository)
           - name: target-inventory-repository-branch
             value: $(params.target-inventory-repository-branch)
-          - name: git-access-token
-            value: $(params.git-access-token)
+          - name: apikey
+            value: $(params.apikey)
           - name: pipeline-debug
             value: $(params.pipeline-debug)
         workspaces:
