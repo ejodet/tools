@@ -49,6 +49,10 @@ spec:
             value: $(params.icd-source-repository-branch)
           - name: icd-source-repository-directory
             value: $(params.icd-source-repository-directory)
+          - name: icd-component-name
+            value: $(params.icd-component-name)
+          - name: icd-configuration-file
+            value: $(params.icd-configuration-file)
           - name: target-inventory-repository
             value: $(params.target-inventory-repository)
           - name: target-inventory-repository-branch
@@ -72,17 +76,6 @@ spec:
       value: "master"
 ---
 apiVersion: tekton.dev/v1beta1
-kind: TriggerBinding
-metadata:
-  name: trigger-binding-build-inventory-icd-orchestration
-spec:
-  params:
-    - name: icd-component-name
-      value: "icd-orchestration"
-    - name: icd-configuration-file
-      value: "image_values.yaml"
----
-apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: event-listener-build-inventory-defaults
@@ -92,6 +85,17 @@ spec:
         name: trigger-binding-build-inventory
       template:
         name: trigger-template-build-inventory
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: trigger-binding-build-inventory-icd-orchestration
+spec:
+  params:
+    - name: icd-component-name
+      value: "icd-orchestration"
+    - name: icd-configuration-file
+      value: "image_values.yaml"
 ---
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
