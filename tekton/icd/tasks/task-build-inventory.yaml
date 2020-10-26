@@ -8,7 +8,7 @@ spec:
     - name: image-version
       description: |
         the image version to use 
-      default: 2.9
+      default: "2.9"
     - name: icd-source-repository
       description: the ICD source repository 
       default: https://github.ibm.com/ibm-cloud-databases/ibm-cloud-databases
