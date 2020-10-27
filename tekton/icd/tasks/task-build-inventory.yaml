@@ -265,14 +265,19 @@ spec:
         # git commit the changes
         echo ""
         echo "Committing changes..."
+        echo ""
+        ls -al $OUTPUT_DIR
+        echo ""
+
         # get information about the commit that modified the source config file
         cd $INPUT_DIR
         MESSAGE=$(git log -n 1 -- $ICD_CONFIGURATION_FILE)
         cd $HOME_DIR
-        echo "MESSAGE: $MESSAGE"
+        echo "Commit message from the source repository:"
+        echo"$MESSAGE"
 
-        cd $OUTPUT_DIR
-        ls -al
+        cd artifacts/$TARGET_INVENTORY_DIRECTORY
+        
         echo ""        
         git config --global user.email "${TRIGGERED_BY}"
         git config --global user.name "Jumpstart Team"
