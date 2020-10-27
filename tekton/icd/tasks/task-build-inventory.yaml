@@ -268,7 +268,7 @@ spec:
         # get information about the commit that modified the source config file
         MESSAGE=$(git log -n 1 -- $VALUES_FILE)
         echo "MESSAGE: $MESSAGE"
-        cd $TARGET_INVENTORY_DIRECTORY
+        cd artifacts/$TARGET_INVENTORY_DIRECTORY
         ls -l
         echo ""        
         git config --global user.email "${TRIGGERED_BY}"
