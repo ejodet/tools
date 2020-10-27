@@ -157,6 +157,14 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
+        - name: PIPELINE_RUN_URL
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-run-url']
+        - name: BUILD_NUMBER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
       script: |
         #!/bin/bash
 
@@ -176,9 +184,8 @@ spec:
         REGISTRY_URL="us.icr.io"
         REGITRY_NAMESPACE="ibm_cloud_databases"
 
-        # TODO: REMOVE DUMMY VALUES
-        PIPELINE_RUN_ID="123456789"
-        BUILD_NUMBER="4567"
+        # keep track of this pipeline URL 
+        PIPELINE_RUN_ID=$PIPELINE_RUN_URL
 
         # STATIC
         GIT_ROOT_URL="https://github.ibm.com/ibm-cloud-databases"
