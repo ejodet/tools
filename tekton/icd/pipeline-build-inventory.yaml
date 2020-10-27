@@ -76,3 +76,5 @@ spec:
           value: $(params.icd-configuration-file)
         - name: repository
           value: $(params.icd-source-repository)
+        - name: pipeline-debug
+          value: $(params.pipeline-debug)
