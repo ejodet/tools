@@ -61,6 +61,11 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
+        # get the creds we stored from previous step
+        source /steps/next-step-env.properties
+        echo "GIT_AUTH_USER: $GIT_AUTH_USER"
+        echo "GIT_TOKEN: $GIT_TOKEN"
+        exit 1
         if [ $PIPELINE_DEBUG == 1 ]; then
             pwd
             env
