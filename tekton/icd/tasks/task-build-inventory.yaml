@@ -262,11 +262,11 @@ spec:
           done
         done
 
+        set -e
+
         # git commit the changes
         echo ""
         echo "Committing changes..."
-        echo ""
-        ls -al $OUTPUT_DIR
         echo ""
 
         # get information about the commit that modified the source config file
@@ -274,9 +274,11 @@ spec:
         MESSAGE=$(git log -n 1 -- $ICD_CONFIGURATION_FILE)
         cd $HOME_DIR
         echo "Commit message from the source repository:"
-        echo"$MESSAGE"
+        echo "$MESSAGE"
+        echo ""
 
-        cd artifacts/$TARGET_INVENTORY_DIRECTORY
+        cd OUTPUT_DIR
+        ls -al 
         
         echo ""        
         git config --global user.email "${TRIGGERED_BY}"
