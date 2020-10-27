@@ -156,6 +156,7 @@ spec:
 
         HOME_DIR=$(pwd)
         
+        source /steps/next-step-env.properties
         echo "GIT_AUTH_USER: $GIT_AUTH_USER"
         echo "GIT_TOKEN: $GIT_TOKEN"
         exit 1
