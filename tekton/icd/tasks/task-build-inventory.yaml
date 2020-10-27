@@ -156,6 +156,7 @@ spec:
         set -e -o pipefail
 
         HOME_DIR=$(pwd)
+        echo "HOME_DIR: $HOME_DIR"
 
         # get the creds we stored from previous step
         source /steps/next-step-env.properties
