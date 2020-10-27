@@ -171,6 +171,14 @@ spec:
         # STATIC
         GIT_ROOT_URL="https://github.ibm.com/ibm-cloud-databases"
 
+        # set the output directory
+        OUT_DIR=$(pwd)/$TARGET_INVENTORY_DIRECTORY/$ICD_COMPONENT_NAME
+        if [ ! -d "$OUT_DIR" ]; then
+          echo "Creating output directory $OUT_DIR"
+          mkdir $OUT_DIR
+          echo
+        fi
+
         # read the source repo values.yaml
         echo "Analyzing the source repository $ICD_CONFIGURATION_FILE for component $ICD_COMPONENT_NAME"
         cd artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
@@ -205,13 +213,11 @@ spec:
 
           REPO_URL=$GIT_ROOT_URL/$PROJECT_NAME
           GIT_URL=$(echo "$REPO_URL" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
-          echo "GIT_URL: $GIT_URL"
           COMMIT_SHA=$(git ls-remote $GIT_URL | head -1 | sed "s/HEAD//")
-          echo "COMMIT_SHA: $COMMIT_SHA"
 
           # create the inventory file
           printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
-          "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $HOME_DIR/$PROJECT
+          "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUT_DIR/$PROJECT
 
           # handle dependencies
           DEPENDENCIES=$(yq r image_values.yaml --tojson | jq --arg project $PROJECT '.[$project] | keys | map(select(. != "image")) | .[]')
@@ -235,20 +241,18 @@ spec:
             PROJECT_NAME=$IMAGE_NAME
             REPO_URL=$GIT_ROOT_URL/$PROJECT_NAME
             GIT_URL=$(echo "$REPO_URL" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
-            echo "GIT_URL: $GIT_URL"
             COMMIT_SHA=$(git ls-remote $GIT_URL | head -1 | sed "s/HEAD//")
-            echo "COMMIT_SHA: $COMMIT_SHA"
 
             # create the inventory file
             printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
-            "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $HOME_DIR/$IMAGE_NAME
+            "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUT_DIR/$IMAGE_NAME
           done
 
         done
-        cd $HOME_DIR
+
         echo ""
         echo "Listing files..."
-        ls -l
+        ls -l $OUT_DIR
         echo ""
         echo "Done!"
       volumeMounts:
