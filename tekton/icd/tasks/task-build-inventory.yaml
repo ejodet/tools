@@ -258,13 +258,18 @@ spec:
           done
         done
 
-        echo ""
-        echo "Listing files..."
-        ls -l $OUTPUT_DIR
-        echo ""
-
         # git commit the changes
-        # get source sha
+        echo ""
+        echo "Committing changes..."
+        # get information about the commit that modified the source config file
+        MESSAGE=$(git log -n 1 -- $VALUES_FILE)
+        cd $OUTPUT_DIR
+        ls -l
+        echo ""
+        git add -A .
+        git commit -m "$MESSAGE"
+        git push
+        
         echo "Done!"
       volumeMounts:
         - mountPath: /steps
