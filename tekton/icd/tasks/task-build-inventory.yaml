@@ -153,6 +153,10 @@ spec:
           value: $(params.target-inventory-repository-directory)
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
+        - name: TRIGGERED_BY
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
       script: |
         #!/bin/bash
 
@@ -265,11 +269,15 @@ spec:
         MESSAGE=$(git log -n 1 -- $VALUES_FILE)
         cd $OUTPUT_DIR
         ls -l
-        echo ""
+        echo ""        
+        git config --global user.email "${TRIGGERED_BY}"
+        git config --global user.name "Jumpstart Team"
+        git config --global push.default matching
+
         git add -A .
         git commit -m "$MESSAGE"
         git push
-        
+
         echo "Done!"
       volumeMounts:
         - mountPath: /steps
