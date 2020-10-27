@@ -155,6 +155,10 @@ spec:
         set -e -o pipefail
 
         HOME_DIR=$(pwd)
+        
+        echo "GIT_AUTH_USER: $GIT_AUTH_USER"
+        echo "GIT_TOKEN: $GIT_TOKEN"
+        exit 1
 
         # TODO: check what the real values should be
         REGISTRY_URL="us.icr.io"
