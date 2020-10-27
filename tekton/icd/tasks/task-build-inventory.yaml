@@ -156,7 +156,6 @@ spec:
         set -e -o pipefail
 
         HOME_DIR=$(pwd)
-        echo "HOME_DIR: $HOME_DIR"
 
         # get the creds we stored from previous step
         source /steps/next-step-env.properties
@@ -172,19 +171,20 @@ spec:
         # STATIC
         GIT_ROOT_URL="https://github.ibm.com/ibm-cloud-databases"
 
-        # set the output directory
-        OUT_DIR=$HOME_DIR/$TARGET_INVENTORY_DIRECTORY/$ICD_COMPONENT_NAME
-        if [ ! -d "$OUT_DIR" ]; then
-          echo "Creating output directory $OUT_DIR"
-          mkdir $OUT_DIR
+        # set the input and output directories
+        INPUT_DIR=artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
+        OUTPUT_DIR=artifacts/$TARGET_INVENTORY_DIRECTORY/$ICD_COMPONENT_NAME
+        if [ ! -d "$OUTPUT_DIR" ]; then
+          echo "Creating output directory $OUTPUT_DIR"
+          mkdir $OUTPUT_DIR
           echo
         fi
 
         # read the source repo values.yaml
         echo "Analyzing the source repository $ICD_CONFIGURATION_FILE for component $ICD_COMPONENT_NAME"
-        cd artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
+        VALUES_FILE=$INPUT_DIR/$ICD_CONFIGURATION_FILE
 
-        PROJECTS=$(yq r image_values.yaml --tojson | jq 'to_entries[] | .key')
+        PROJECTS=$(yq r $VALUES_FILE --tojson | jq 'to_entries[] | .key')
 
         for PROJECT in $PROJECTS; do
           # project name
@@ -192,12 +192,12 @@ spec:
           echo "Processing $PROJECT...."
 
           # image URL
-          IMAGE_DIGEST=$(yq r image_values.yaml --tojson | jq --arg project $PROJECT '.[$project].image.digest' | sed -e 's/^"//' -e 's/"$//')
-          IMAGE_NAME=$(yq r image_values.yaml --tojson | jq --arg project $PROJECT '.[$project].image.name' | sed -e 's/^"//' -e 's/"$//')
+          IMAGE_DIGEST=$(yq r $VALUES_FILE --tojson | jq --arg project $PROJECT '.[$project].image.digest' | sed -e 's/^"//' -e 's/"$//')
+          IMAGE_NAME=$(yq r $VALUES_FILE --tojson | jq --arg project $PROJECT '.[$project].image.name' | sed -e 's/^"//' -e 's/"$//')
           IMAGE_URL=$REGISTRY_URL/$REGITRY_NAMESPACE/$IMAGE_NAME:$IMAGE_DIGEST
 
           # version
-          VERSION=$(grep version $PROJECT/Chart.yaml | awk '{print $2};')
+          VERSION=$(grep version $INPUT_DIR/$PROJECT/Chart.yaml | awk '{print $2};')
 
           # project URL and latest commit
           PROJECT_NAME=$PROJECT
@@ -218,21 +218,21 @@ spec:
 
           # create the inventory file
           printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
-          "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUT_DIR/$PROJECT
+          "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUTPUT_DIR/$PROJECT
 
           # handle dependencies
-          DEPENDENCIES=$(yq r image_values.yaml --tojson | jq --arg project $PROJECT '.[$project] | keys | map(select(. != "image")) | .[]')
+          DEPENDENCIES=$(yq r $VALUES_FILE --tojson | jq --arg project $PROJECT '.[$project] | keys | map(select(. != "image")) | .[]')
           for DEPENDENCY in $DEPENDENCIES; do
             DEPENDENCY=$(echo "$DEPENDENCY" | sed -e 's/^"//' -e 's/"$//')
             echo "Processing dependency $DEPENDENCY..."
             # image URL
-            IMAGE_DIGEST=$(yq r image_values.yaml --tojson | jq --arg project $PROJECT --arg dependency $DEPENDENCY '.[$project] | .[$dependency].image.digest' | sed -e 's/^"//' -e 's/"$//')
-            IMAGE_NAME=$(yq r image_values.yaml --tojson | jq --arg project $PROJECT --arg dependency $DEPENDENCY '.[$project] | .[$dependency].image.name' | sed -e 's/^"//' -e 's/"$//')
+            IMAGE_DIGEST=$(yq r $VALUES_FILE --tojson | jq --arg project $PROJECT --arg dependency $DEPENDENCY '.[$project] | .[$dependency].image.digest' | sed -e 's/^"//' -e 's/"$//')
+            IMAGE_NAME=$(yq r $VALUES_FILE --tojson | jq --arg project $PROJECT --arg dependency $DEPENDENCY '.[$project] | .[$dependency].image.name' | sed -e 's/^"//' -e 's/"$//')
             IMAGE_URL=$REGISTRY_URL/$REGITRY_NAMESPACE/$IMAGE_NAME:$IMAGE_DIGEST
             
             # version
             # TODO: none found in https://github.ibm.com/ibm-cloud-databases/ibm-cloud-databases/tree/master/icd-orchestration
-            VERSION=$(grep version $IMAGE_NAME/Chart.yaml | awk '{print $2};') || true
+            VERSION=$(grep version INPUT_DIR/$IMAGE_NAME/Chart.yaml | awk '{print $2};') || true
             if [ -z "$VERSION" ]; then
               echo "Version not found - setting dummy value for now..."
               VERSION="1234"
@@ -246,14 +246,14 @@ spec:
 
             # create the inventory file
             printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
-            "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUT_DIR/$IMAGE_NAME
+            "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUTPUT_DIR/$IMAGE_NAME
           done
 
         done
 
         echo ""
         echo "Listing files..."
-        ls -l $OUT_DIR
+        ls -l $OUTPUT_DIR
         echo ""
 
         # git commit the changes
