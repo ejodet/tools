@@ -172,7 +172,7 @@ spec:
         GIT_ROOT_URL="https://github.ibm.com/ibm-cloud-databases"
 
         # set the output directory
-        OUT_DIR=$(pwd)/$TARGET_INVENTORY_DIRECTORY/$ICD_COMPONENT_NAME
+        OUT_DIR=$HOME_DIR/$TARGET_INVENTORY_DIRECTORY/$ICD_COMPONENT_NAME
         if [ ! -d "$OUT_DIR" ]; then
           echo "Creating output directory $OUT_DIR"
           mkdir $OUT_DIR
@@ -254,6 +254,9 @@ spec:
         echo "Listing files..."
         ls -l $OUT_DIR
         echo ""
+
+        # git commit the changes
+        # get source sha
         echo "Done!"
       volumeMounts:
         - mountPath: /steps
