@@ -275,7 +275,7 @@ spec:
         echo "$MESSAGE"
         echo ""
 
-        cd OUTPUT_DIR
+        cd $OUTPUT_DIR
         ls -al 
         
         echo ""        
