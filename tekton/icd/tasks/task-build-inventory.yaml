@@ -7,10 +7,10 @@ spec:
   params:
     - name: image-version
       description: |
-        the image version to use 
+        the image version to use
       default: "2.9"
     - name: icd-source-repository-directory
-      description: the ICD source directory 
+      description: the ICD source directory
       default: ibm-cloud-databases
     - name: icd-component-name
       description: the name of the ICD component (database, control-plane, ...)
