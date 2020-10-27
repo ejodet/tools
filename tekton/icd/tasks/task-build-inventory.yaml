@@ -268,6 +268,12 @@ spec:
         # get information about the commit that modified the source config file
         MESSAGE=$(git log -n 1 -- $VALUES_FILE)
         echo "MESSAGE: $MESSAGE"
+        echo ""
+        echo "source dir"
+        ls -al artifacts/$ICD_SOURCE_DIRECTORY
+        echo "target dir"
+        ls -al artifacts/$TARGET_INVENTORY_DIRECTORY
+        echo ""
         cd artifacts/$TARGET_INVENTORY_DIRECTORY
         ls -l
         echo ""        
