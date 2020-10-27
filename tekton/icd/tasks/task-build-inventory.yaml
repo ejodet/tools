@@ -25,6 +25,9 @@ spec:
     - name: ibmcloud-api
       description: the ibmcloud api
       default: https://cloud.ibm.com
+    - name: continuous-delivery-context-secret
+      description: name of the secret containing the continuous delivery pipeline context secrets
+      default: secure-properties
     - name: ibmcloud-apikey-secret-key
       description: field in the secret that contains the api key used to login to ibmcloud
       default: apikey
@@ -36,6 +39,16 @@ spec:
   workspaces:
     - name: output
       mountPath: /artifacts
+  stepTemplate:
+    env:
+      - name: API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: $(params.continuous-delivery-context-secret)
+            key: $(params.ibmcloud-apikey-secret-key)
+            optional: true
+      - name: PIPELINE_DEBUG
+        value: $(params.pipeline-debug)
   steps:
     - name: fetch-git-token
       image: ibmcom/pipeline-base-image:2.6
