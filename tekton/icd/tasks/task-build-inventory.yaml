@@ -155,7 +155,7 @@ spec:
           value: $(params.pipeline-debug)
       script: |
         #!/bin/bash
-        set -e -o pipefail
+        
         if [ $PIPELINE_DEBUG == 1 ]; then
             pwd
             env
@@ -256,7 +256,7 @@ spec:
             printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
             "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUTPUT_DIR/$IMAGE_NAME
           done
-
+        ls -l $OUTPUT_DIR
         done
 
         echo ""
