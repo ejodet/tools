@@ -204,8 +204,8 @@ spec:
           esac
 
           REPO_URL=$GIT_ROOT_URL/$PROJECT_NAME
-          echo "GIT_URL: $GIT_URL"
           GIT_URL=$(echo "$REPO_URL" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
+          echo "GIT_URL: $GIT_URL"
           COMMIT_SHA=$(git ls-remote $GIT_URL | head -1 | sed "s/HEAD//")
           echo "COMMIT_SHA: $COMMIT_SHA"
 
