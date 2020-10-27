@@ -267,7 +267,8 @@ spec:
         echo "Committing changes..."
         # get information about the commit that modified the source config file
         MESSAGE=$(git log -n 1 -- $VALUES_FILE)
-        cd $OUTPUT_DIR
+        echo "MESSAGE: $MESSAGE"
+        cd $TARGET_INVENTORY_DIRECTORY
         ls -l
         echo ""        
         git config --global user.email "${TRIGGERED_BY}"
@@ -275,7 +276,7 @@ spec:
         git config --global push.default matching
 
         git add -A .
-        git commit -m "$MESSAGE"
+        git commit -m "${MESSAGE}"
         git push
 
         echo "Done!"
