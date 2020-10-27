@@ -61,11 +61,7 @@ spec:
       script: |
         #!/bin/bash
         set -e -o pipefail
-        # get the creds we stored from previous step
-        source /steps/next-step-env.properties
-        echo "GIT_AUTH_USER: $GIT_AUTH_USER"
-        echo "GIT_TOKEN: $GIT_TOKEN"
-        exit 1
+        
         if [ $PIPELINE_DEBUG == 1 ]; then
             pwd
             env
@@ -206,11 +202,12 @@ spec:
             telegraf) PROJECT_NAME="telegraf-image";;
             scale-operator) PROJECT_NAME="k8s-vertical-auto-scaling";;
           esac
+
           REPO_URL=$GIT_ROOT_URL/$PROJECT_NAME
-          GIT_URL=$(echo "$REPO_URL" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
           echo "GIT_URL: $GIT_URL"
-          exit 1
-          COMMIT_SHA=$(git ls-remote $REPO_URL | head -1 | sed "s/HEAD//")
+          GIT_URL=$(echo "$REPO_URL" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
+          COMMIT_SHA=$(git ls-remote $GIT_URL | head -1 | sed "s/HEAD//")
+          echo "COMMIT_SHA: $COMMIT_SHA"
 
           # create the inventory file
           printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
@@ -237,7 +234,10 @@ spec:
             # project URL and latest commit
             PROJECT_NAME=$IMAGE_NAME
             REPO_URL=$GIT_ROOT_URL/$PROJECT_NAME
-            COMMIT_SHA=$(git ls-remote $REPO_URL | head -1 | sed "s/HEAD//")
+            GIT_URL=$(echo "$REPO_URL" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
+            echo "GIT_URL: $GIT_URL"
+            COMMIT_SHA=$(git ls-remote $GIT_URL | head -1 | sed "s/HEAD//")
+            echo "COMMIT_SHA: $COMMIT_SHA"
 
             # create the inventory file
             printf '{\n"artifact":"%s",\n"pipeline_run_id":"%s",\n"build_number":"%s",\n"version":"%s",\n"name":"%s",\n"repository_url":"%s",\n"commit_sha":"%s"\n}' \
