@@ -74,3 +74,5 @@ spec:
           value: $(params.icd-component-name)
         - name: icd-configuration-file
           value: $(params.icd-configuration-file)
+        - name: repository
+          value: $(params.icd-source-repository)
