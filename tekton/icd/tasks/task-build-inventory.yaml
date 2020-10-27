@@ -240,7 +240,7 @@ spec:
             
             # version
             # TODO: none found in https://github.ibm.com/ibm-cloud-databases/ibm-cloud-databases/tree/master/icd-orchestration
-            VERSION=$(grep version INPUT_DIR/$IMAGE_NAME/Chart.yaml | awk '{print $2};') || true
+            VERSION=$(grep version $INPUT_DIR/$IMAGE_NAME/Chart.yaml | awk '{print $2};') || true
             if [ -z "$VERSION" ]; then
               echo "Version not found - setting dummy value for now..."
               VERSION="1234"
