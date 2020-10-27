@@ -262,8 +262,6 @@ spec:
           done
         done
 
-        set -e
-
         # git commit the changes
         echo ""
         echo "Committing changes..."
