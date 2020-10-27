@@ -151,6 +151,8 @@ spec:
           value: $(params.icd-configuration-file)
         - name: TARGET_INVENTORY_DIRECTORY
           value: $(params.target-inventory-repository-directory)
+        - name: PIPELINE_DEBUG
+          value: $(params.pipeline-debug)
       script: |
         #!/bin/bash
         set -e -o pipefail
