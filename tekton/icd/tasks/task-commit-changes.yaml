@@ -63,13 +63,10 @@ spec:
         echo ""
 
         DATE=$(date -u)
-        MESSAGE=$'$DATE - ICD to Shift-Left inventory conversion - \n \
+        MESSAGE= printf "$DATE - ICD to Shift-Left inventory conversion\n \
         Build number: $BUILD_NUMBER\n \
-        Pipeline run URL: $PIPELINE_RUN_URL'
-
-        echo "Commit message:"
-        echo "$MESSAGE"
-        echo ""
+        Pipeline run URL: $PIPELINE_RUN_URL\n \
+        Triggered by $TRIGGERED_BY"
 
         cd $OUTPUT_DIR
         ls -al 
