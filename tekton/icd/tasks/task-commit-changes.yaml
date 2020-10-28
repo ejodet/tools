@@ -64,9 +64,10 @@ spec:
 
         DATE=$(date -u)
         MESSAGE="Converting ICD inventory files to shift-left inventory format - $DATE\n \
-        Build number: $BUILD_NUMBER\
-        Pipeline run URL: PIPELINE_RUN_URL"
-        echo "Commit message from the source repository:"
+        Build number: $BUILD_NUMBER\n \
+        Pipeline run URL: $PIPELINE_RUN_URL"
+
+        echo "Commit message:"
         echo "$MESSAGE"
         echo ""
 
