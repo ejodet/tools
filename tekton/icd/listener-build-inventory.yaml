@@ -107,3 +107,25 @@ spec:
         name: trigger-binding-build-inventory-icd-orchestration
       template:
         name: trigger-template-build-inventory
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: trigger-binding-build-inventory-icd-control-plane
+spec:
+  params:
+    - name: icd-component-name
+      value: 'icd-control-plane'
+    - name: icd-configuration-file
+      value: 'values.yaml'
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: event-listener-build-inventory-icd-control-plane
+spec:
+  triggers:
+    - binding:
+        name: trigger-binding-build-inventory-icd-control-plane
+      template:
+        name: trigger-template-build-inventory
