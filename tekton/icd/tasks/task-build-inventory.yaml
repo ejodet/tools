@@ -192,12 +192,7 @@ spec:
 
         # set the input and output directories
         INPUT_DIR=artifacts/$ICD_SOURCE_DIRECTORY/$ICD_COMPONENT_NAME
-        OUTPUT_DIR=artifacts/$TARGET_INVENTORY_DIRECTORY/$ICD_COMPONENT_NAME
-        if [ ! -d "$OUTPUT_DIR" ]; then
-          echo "Creating output directory $OUTPUT_DIR"
-          mkdir $OUTPUT_DIR
-          echo
-        fi
+        OUTPUT_DIR=artifacts/$TARGET_INVENTORY_DIRECTORY
 
         # read the source repo values.yaml
         echo "Analyzing the source repository $ICD_CONFIGURATION_FILE for component $ICD_COMPONENT_NAME"
