@@ -14,10 +14,10 @@ spec:
       default: ibm-cloud-databases
     - name: icd-component-name
       description: the name of the ICD component (database, control-plane, ...)
-      default: control-plane
+      default: icd-control-plane
     - name: icd-configuration-file
       description: the configuration file containing the deployment information
-      default: values.yaml
+      default: requirements.yaml
     - name: target-inventory-repository-directory
       description: the target directory where inventory files will be stored
     - name: repository
@@ -182,7 +182,7 @@ spec:
         # get the creds we stored from previous step
         source /steps/next-step-env.properties
 
-        # TODO: check what the real values should be
+        # TODO: check what the real values should be - AND parameterize
         REGISTRY_URL="us.icr.io"
         REGITRY_NAMESPACE="ibm_cloud_databases"
 

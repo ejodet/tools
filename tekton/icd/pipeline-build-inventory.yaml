@@ -70,7 +70,7 @@ spec:
           value: $(params.icd-source-repository)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
-    - name: control-plane
+    - name: icd-control-plane
       taskRef:
         name: build-inventory-control-plane
       runAfter:
@@ -93,7 +93,7 @@ spec:
         name: commit-changes
       runAfter:
         - icd-orchestration
-        - control-plane
+        - icd-control-plane
       workspaces:
         - name: output
           workspace: pipeline-ws
