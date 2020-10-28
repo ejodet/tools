@@ -56,9 +56,9 @@ spec:
           value: $(params.target-inventory-repository-directory)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
-    - name: build-inventory
+    - name: build-inventory-icd-orchestration
       taskRef:
-        name: build-inventory
+        name: build-inventory-icd-orchestration
       runAfter:
         - clone-icd-source-repository
         - clone-target-inventory-repository
@@ -76,5 +76,18 @@ spec:
           value: $(params.icd-configuration-file)
         - name: repository
           value: $(params.icd-source-repository)
+        - name: pipeline-debug
+          value: $(params.pipeline-debug)
+    - name: commit-changes
+      taskRef:
+        name: commit-changes
+      runAfter:
+        - build-inventory-icd-orchestration
+      workspaces:
+        - name: output
+          workspace: pipeline-ws
+      params:
+        - name: target-inventory-repository-directory
+          value: $(params.target-inventory-repository-directory)
         - name: pipeline-debug
           value: $(params.pipeline-debug)

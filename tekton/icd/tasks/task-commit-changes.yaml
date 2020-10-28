@@ -1,0 +1,84 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: commit-changes
+spec:
+  params:
+    - name: image-version
+      description: |
+        the image version to use
+      default: "2.9"
+    - name: target-inventory-repository-directory
+      description: the target directory where inventory files will be stored
+    - name: pipeline-debug
+      description: Pipeline debug mode
+      default: "0"
+  workspaces:
+    - name: output
+      mountPath: /artifacts
+  stepTemplate:
+    env:
+      - name: PIPELINE_DEBUG
+        value: $(params.pipeline-debug)
+  steps:
+    - name: commit-changes
+      image: ibmcom/pipeline-base-image:$(params.image-version)
+      imagePullPolicy: Always
+      env:
+        - name: IMAGE_VERSION
+          value: $(params.image-version)
+        - name: TARGET_INVENTORY_DIRECTORY
+          value: $(params.target-inventory-repository-directory)
+        - name: TRIGGERED_BY
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
+        - name: PIPELINE_DEBUG
+          value: $(params.pipeline-debug)
+      script: |
+        #!/bin/bash
+
+        if [ $PIPELINE_DEBUG == 1 ]; then
+            pwd
+            env
+            trap env EXIT
+            set -x
+        fi
+
+        HOME_DIR=$(pwd)
+        OUTPUT_DIR=artifacts/$TARGET_INVENTORY_DIRECTORY
+
+        # git commit the changes
+        echo ""
+        echo "Committing changes..."
+        echo ""
+
+        # get information about the commit that modified the source config file
+        cd $INPUT_DIR
+        # we need to cd to the INPUT_DIR otherwise git command will fail
+        MESSAGE=$(git log -n 1 -- $ICD_CONFIGURATION_FILE)
+        cd $HOME_DIR
+        echo "Commit message from the source repository:"
+        echo "$MESSAGE"
+        echo ""
+
+        cd $OUTPUT_DIR
+        ls -al 
+        
+        echo ""        
+        git config --global user.email "${TRIGGERED_BY}"
+        git config --global user.name "Jumpstart Team"
+        git config --global push.default matching
+
+        git add -A .
+        git commit -m "${MESSAGE}"
+        git push
+
+        echo "Done!"
+      volumeMounts:
+        - mountPath: /steps
+          name: steps-volume
+  volumes:
+    - name: steps-volume
+      emptyDir: {}

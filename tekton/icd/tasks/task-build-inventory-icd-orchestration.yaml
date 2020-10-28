@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: build-inventory
+  name: build-inventory-icd-orchestration
 spec:
   params:
     - name: image-version
@@ -245,7 +245,6 @@ spec:
             IMAGE_URL=$REGISTRY_URL/$REGITRY_NAMESPACE/$IMAGE_NAME:$IMAGE_DIGEST
             
             # version
-            # TODO: none found in https://github.ibm.com/ibm-cloud-databases/ibm-cloud-databases/tree/master/icd-orchestration
             VERSION=$(grep version $INPUT_DIR/$IMAGE_NAME/Chart.yaml | awk '{print $2};') || true
             if [ -z "$VERSION" ]; then
               echo "Version not found - setting sha..."
@@ -263,33 +262,8 @@ spec:
             "$IMAGE_URL" "$PIPELINE_RUN_ID" "$BUILD_NUMBER" "$VERSION" "$PROJECT" "$REPO_URL" "$COMMIT_SHA" > $OUTPUT_DIR/$IMAGE_NAME
           done
         done
-
-        # git commit the changes
         echo ""
-        echo "Committing changes..."
-        echo ""
-
-        # get information about the commit that modified the source config file
-        cd $INPUT_DIR
-        MESSAGE=$(git log -n 1 -- $ICD_CONFIGURATION_FILE)
-        cd $HOME_DIR
-        echo "Commit message from the source repository:"
-        echo "$MESSAGE"
-        echo ""
-
-        cd $OUTPUT_DIR
-        ls -al 
-        
-        echo ""        
-        git config --global user.email "${TRIGGERED_BY}"
-        git config --global user.name "Jumpstart Team"
-        git config --global push.default matching
-
-        git add -A .
-        git commit -m "${MESSAGE}"
-        git push
-
-        echo "Done!"
+        echo "Done for component $ICD_COMPONENT_NAME..."
       volumeMounts:
         - mountPath: /steps
           name: steps-volume
