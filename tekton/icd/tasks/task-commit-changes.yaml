@@ -64,7 +64,7 @@ spec:
 
         DATE=$(date -u)
         MESSAGE=$(printf "$DATE - ICD to Shift-Left inventory conversion\n \ \
-        Triggered by $TRIGGERED_BY\n\n\
+        Triggered by $TRIGGERED_BY\n\n\ \
         Build number: $BUILD_NUMBER\n \
         Pipeline run URL: $PIPELINE_RUN_URL\n")
 
