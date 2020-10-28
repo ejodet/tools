@@ -34,6 +34,14 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
+        - name: PIPELINE_RUN_URL
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-run-url']
+        - name: BUILD_NUMBER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
       script: |
@@ -54,11 +62,10 @@ spec:
         echo "Committing changes..."
         echo ""
 
-        # get information about the commit that modified the source config file
-        cd $INPUT_DIR
-        # we need to cd to the INPUT_DIR otherwise git command will fail
-        MESSAGE=$(git log -n 1 -- $ICD_CONFIGURATION_FILE)
-        cd $HOME_DIR
+        DATE=$(date -u)
+        MESSAGE="Converting ICD inventory files to shift-left inventory format - $DATE\n \
+        Build number: $BUILD_NUMBER\
+        Pipeline run URL: PIPELINE_RUN_URL"
         echo "Commit message from the source repository:"
         echo "$MESSAGE"
         echo ""
