@@ -56,7 +56,7 @@ spec:
           value: $(params.target-inventory-repository-directory)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
-    - name: build-inventory-icd-orchestration
+    - name: icd-orchestration
       taskRef:
         name: build-inventory-icd-orchestration
       runAfter:
@@ -82,7 +82,7 @@ spec:
       taskRef:
         name: commit-changes
       runAfter:
-        - build-inventory-icd-orchestration
+        - icd-orchestration
       workspaces:
         - name: output
           workspace: pipeline-ws
