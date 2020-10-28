@@ -14,10 +14,10 @@ spec:
       default: ibm-cloud-databases
     - name: icd-component-name
       description: the name of the ICD component (database, control-plane, ...)
-      default: icd-orchestration
+      default: control-plane
     - name: icd-configuration-file
       description: the configuration file containing the deployment information
-      default: image_values.yaml
+      default: values.yaml
     - name: target-inventory-repository-directory
       description: the target directory where inventory files will be stored
     - name: repository

@@ -11,10 +11,6 @@ spec:
       description: the branch for the git repo
     - name: icd-source-repository-directory
       description: name of the new directory to clone into
-    - name: icd-component-name
-      description: the name of the ICD component (database, control-plane, ...)
-    - name: icd-configuration-file
-      description: the configuration file containing the deployment information
     - name: target-inventory-repository
       description: the target repository where inventory files will be stored
     - name: target-inventory-repository-branch
@@ -49,10 +45,6 @@ spec:
             value: $(params.icd-source-repository-branch)
           - name: icd-source-repository-directory
             value: $(params.icd-source-repository-directory)
-          - name: icd-component-name
-            value: $(params.icd-component-name)
-          - name: icd-configuration-file
-            value: $(params.icd-configuration-file)
           - name: target-inventory-repository
             value: $(params.target-inventory-repository)
           - name: target-inventory-repository-branch
@@ -92,10 +84,6 @@ metadata:
   name: trigger-binding-build-inventory-icd-orchestration
 spec:
   params:
-    - name: icd-component-name
-      value: 'icd-orchestration'
-    - name: icd-configuration-file
-      value: 'image_values.yaml'
 ---
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
