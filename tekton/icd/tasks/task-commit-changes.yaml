@@ -63,9 +63,9 @@ spec:
         echo ""
 
         DATE=$(date -u)
-        MESSAGE="Converting ICD inventory files to shift-left inventory format - $DATE\n \
+        MESSAGE=$("$DATE - ICD to Shift-Left inventory conversion - \n \
         Build number: $BUILD_NUMBER\n \
-        Pipeline run URL: $PIPELINE_RUN_URL"
+        Pipeline run URL: $PIPELINE_RUN_URL")
 
         echo "Commit message:"
         echo "$MESSAGE"
