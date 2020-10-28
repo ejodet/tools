@@ -63,10 +63,10 @@ spec:
         echo ""
 
         DATE=$(date -u)
-        MESSAGE=$(printf "$DATE - ICD to Shift-Left inventory conversion\n \
+        MESSAGE=$(printf "$DATE - ICD to Shift-Left inventory conversion\n \ \
+        Triggered by $TRIGGERED_BY\n\n\
         Build number: $BUILD_NUMBER\n \
-        Pipeline run URL: $PIPELINE_RUN_URL\n \
-        Triggered by $TRIGGERED_BY")
+        Pipeline run URL: $PIPELINE_RUN_URL\n")
 
         cd $OUTPUT_DIR
         ls -al 
