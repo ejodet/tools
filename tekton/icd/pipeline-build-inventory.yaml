@@ -78,11 +78,34 @@ spec:
           value: $(params.icd-source-repository)
         - name: pipeline-debug
           value: $(params.pipeline-debug)
+    - name: control-plane
+      taskRef:
+        name: build-inventory-control-plane
+      runAfter:
+        - clone-icd-source-repository
+        - clone-target-inventory-repository
+      workspaces:
+        - name: output
+          workspace: pipeline-ws
+      params:
+        - name: icd-source-repository-directory
+          value: $(params.icd-source-repository-directory)
+        - name: target-inventory-repository-directory
+          value: $(params.target-inventory-repository-directory)
+        - name: icd-component-name
+          value: $(params.icd-component-name)
+        - name: icd-configuration-file
+          value: $(params.icd-configuration-file)
+        - name: repository
+          value: $(params.icd-source-repository)
+        - name: pipeline-debug
+          value: $(params.pipeline-debug)
     - name: commit-changes
       taskRef:
         name: commit-changes
       runAfter:
         - icd-orchestration
+        - control-plane
       workspaces:
         - name: output
           workspace: pipeline-ws
