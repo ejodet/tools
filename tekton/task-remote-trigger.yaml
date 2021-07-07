@@ -34,11 +34,7 @@ spec:
         #!/bin/bash
         set -e -o pipefail
         echo "Triggering pipeline ....."
-        echo "HEADER_TOKEN: $HEADER_TOKEN"
         curl -X POST \
         https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-webhook/e5769900-4578-483a-9a8b-2e8178a3de9f/run/4600e8d5-4bb5-43fe-bc16-a056e98474a6 \
-        -H 'Content-Type: application/json' \
-        -H 'token: $HEADER_TOKEN' \
-        -d '{
-          "some-key": "some-value"
-        }'
+            --header "X-Token: ${HEADER_TOKEN}" \
+            --header "Content-Type: application/json"
