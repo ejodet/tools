@@ -1,0 +1,26 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-remote-trigger
+spec:
+  params:
+    - name: image-pull-policy
+    - name: image-version
+    - name: header-token
+  workspaces:
+    - name: pipeline-ws
+  tasks:
+    - name: remote-trigger
+      taskRef:
+        name: remote-trigger
+      params:
+        - name: image-pull-policy
+          value: $(params.image-pull-policy)
+        - name: image-version
+          value: $(params.image-version)
+        - name: header-token
+          value: $(params.header-token)
+      workspaces:
+        - name: workspace
+          workspace: pipeline-ws

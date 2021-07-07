@@ -1,0 +1,43 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: remote-trigger
+spec:
+  params:
+    - name: image-pull-policy
+      description: |
+        the imagePullPolicy to use 
+      default: Always
+    - name: image-version
+      description: |
+        the image version to use 
+      default: latest
+    - name: header-token
+      description: |
+        the token to use
+  workspaces:
+    - name: workspace
+      mountPath: /artifacts
+  steps:
+    - name: trigger-pipeline
+      image: ibmcom/pipeline-base-image:$(params.image-version)
+      imagePullPolicy: Always
+      env:
+        - name: PULL_POLICY
+          value: $(params.image-pull-policy)
+        - name: IMAGE_VERSION
+          value: $(params.image-version)
+        - name: HEADER_TOKEN
+          value: $(params.header-token)
+      script: |
+        #!/bin/bash
+        set -e -o pipefail
+        echo "Triggering pipeline ....."
+        curl -X POST \
+        https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-webhook/e5769900-4578-483a-9a8b-2e8178a3de9f/run/4600e8d5-4bb5-43fe-bc16-a056e98474a6 \
+        -H 'Content-Type: application/json' \
+        -H 'token: $HEADER_TOKEN' \
+        -d '{
+          "some-key": "some-value"
+        }'
