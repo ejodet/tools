@@ -1,0 +1,45 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: break-glass
+spec:
+  params:  
+    - name: api-key
+      description: |
+        the cloud.ibm.com API Key to use to get a bearer token
+    - name: pipeline-id
+      description: |
+        the UUID of the pipeline to download
+    - name: file-name
+      description: |
+        the name of the export file 
+      default: localRun
+    - name: artifactory-repository
+      description: |
+        the Artifactory repository where export file will be uploaded
+  workspaces:
+    - name: workspace
+      mountPath: /artifacts
+  steps:
+    - name: fetch-local-run
+      image: ibmcom/pipeline-base-image:$(params.image-version)
+      imagePullPolicy: Always
+      env:
+        - name: API_KEY
+          value: $(params.api-key)
+        - name: PIPELINE_ID
+          value: $(params.pipeline-id)
+        - name: FILE_NAME
+          value: $(params.file-name)
+        - name: ARTIFACTORY_REPOSITORY
+          value: $(params.artifactory-repository)
+      script: |
+        #!/bin/bash
+        set -e -o pipefail
+        echo  "toto!!!!"
+        echo "API_KEY: $API_KEY"
+        echo "PIPELINE_ID: $PIPELINE_ID"
+        echo "FILE_NAME: $FILE_NAME"
+        echo "ARTIFACTORY_REPOSITORY: $ARTIFACTORY_REPOSITORY"
+        exit 0

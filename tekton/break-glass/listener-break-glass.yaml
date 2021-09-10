@@ -1,0 +1,63 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-template-break-glass
+spec:
+  params:
+    - name: api-key
+    - name: pipeline-id
+    - name: file-name
+      default: localRun
+    - name: artifactory-repository
+  resourcetemplates:
+    # PVC definition like pre-tekton-0.10.1
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: break-glass-$(uid)-pvc
+      spec:
+        resources:
+          requests:
+            storage: 5Gi
+        volumeMode: Filesystem
+        accessModes:
+          - ReadWriteOnce
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: break-glass-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-break-glass
+        params:
+          - name: api-key
+            value: $(params.api-key)
+          - name: pipeline-id
+            value: $(params.pipeline-id)
+          - name: file-name
+            value: $(params.file-name)
+          - name: artifactory-repository
+            value: $(params.artifactory-repository)
+        workspaces:
+          - name: pipeline-ws
+            persistentVolumeClaim:
+              claimName: break-glass-$(uid)-pvc
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: trigger-binding-break-glass
+spec:
+  params:
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: event-listener-break-glass
+spec:
+  triggers:
+    - binding:
+        name: trigger-binding-break-glass
+      template:
+        name: trigger-template-break-glass

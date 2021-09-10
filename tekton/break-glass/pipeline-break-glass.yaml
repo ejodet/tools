@@ -1,0 +1,29 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-break-glass
+spec:
+  params:
+    - name: api-key
+    - name: pipeline-id
+    - name: file-name
+    - name: artifactory-repository
+  workspaces:
+    - name: pipeline-ws
+  tasks:
+    - name: break-glass
+      taskRef:
+        name: break-glass
+      params:
+        - name: api-key
+          value: $(params.api-key)
+        - name: pipeline-id
+          value: $(params.pipeline-id)
+        - name: file-name
+          value: $(params.file-name)
+        - name: artifactory-repository
+          value: $(params.artifactory-repository)
+      workspaces:
+        - name: workspace
+          workspace: pipeline-ws
