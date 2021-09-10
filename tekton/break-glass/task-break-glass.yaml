@@ -78,6 +78,7 @@ spec:
         echo "EXPORT_URL=$EXPORT_URL"
         echo ""
         # set params and payload
+        echo "some content here" > /artifact/myfile.txt
         ls -al /artifacts
         # curl -H "Authorization: ${TOKEN}" -H "Content-Type: application/json" -X POST ${EXPORT_URL} -d '{"triggerName":"Manual CD Trigger","eventParams":{"properties": [{"type": "SECURE","name": "localrun_aes_key","value": "'"${AES_KEY}"'"}]}}' > $FULL_PATH_FILE
         echo ""
