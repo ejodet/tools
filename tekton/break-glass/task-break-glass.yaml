@@ -72,14 +72,14 @@ spec:
 
         # export file to corresponding path
         EXPORT_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${PIPELINE_ID}/runs?localRun=true"
-        FULL_PATH_FILE="$exportPath/$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt"
+        FULL_PATH_FILE="/artifacts/$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt"
         echo "Exporting pipeline $PIPELINE_ID to $FULL_PATH_FILE..."
         echo ""
         echo "EXPORT_URL=$EXPORT_URL"
         echo ""
         # set params and payload
-        echo "some content here" > /artifacts/myfile.txt
-        ls -al /artifacts
-        # curl -H "Authorization: ${TOKEN}" -H "Content-Type: application/json" -X POST ${EXPORT_URL} -d '{"triggerName":"Manual CD Trigger","eventParams":{"properties": [{"type": "SECURE","name": "localrun_aes_key","value": "'"${AES_KEY}"'"}]}}' > $FULL_PATH_FILE
+        curl -H "Authorization: ${TOKEN}" -H "Content-Type: application/json" -X POST ${EXPORT_URL} -d '{"triggerName":"Manual CD Trigger","eventParams":{"properties": [{"type": "SECURE","name": "localrun_aes_key","value": "'"${AES_KEY}"'"}]}}' > $FULL_PATH_FILE
         echo ""
         echo "Done!"
+        ls -al /artifacts
+        cat FULL_PATH_FILE
