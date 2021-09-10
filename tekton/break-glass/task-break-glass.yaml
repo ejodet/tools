@@ -26,7 +26,7 @@ spec:
       image: ibmcom/pipeline-base-image:latest
       imagePullPolicy: Always
       env:
-        - name: API_KEY
+        - name: IBMCLOUD_API_KEY
           value: $(params.api-key)
         - name: PIPELINE_ID
           value: $(params.pipeline-id)
@@ -38,8 +38,10 @@ spec:
         #!/bin/bash
         set -e -o pipefail
         echo  "toto!!!!"
-        echo "API_KEY: $API_KEY"
+        echo "IBMCLOUD_API_KEY: $IBMCLOUD_API_KEY"
         echo "PIPELINE_ID: $PIPELINE_ID"
         echo "FILE_NAME: $FILE_NAME"
         echo "ARTIFACTORY_REPOSITORY: $ARTIFACTORY_REPOSITORY"
+
+        ibmcloud login -a cloud.ibm.com --no-region
         exit 0
