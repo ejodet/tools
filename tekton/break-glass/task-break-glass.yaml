@@ -97,4 +97,4 @@ spec:
         echo "Uploading to Artifactory..."
         EXPORT_URL="$ARTIFACTORY_REPOSITORY/ejd/$EXPORT_FILE_NAME"
         # TODO - recupérer les variables
-        curl -u ARTIFACTORY_USER:ARTIFACTORY_PWD -X PUT $EXPORT_URL -T $FULL_PATH_FILE
+        curl -H "X-JFrog-Art-Api:$ARTIFACTORY_PWD" -X PUT $EXPORT_URL -T $FULL_PATH_FILE
