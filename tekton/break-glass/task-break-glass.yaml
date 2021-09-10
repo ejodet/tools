@@ -53,8 +53,8 @@ spec:
         fi
 
         # Get AES key
-        PIPELINE_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${pipelineId}"
-        echo "Getting localrun_aes_key's value from pipeline $pipelineId..."
+        PIPELINE_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${PIPELINE_ID}"
+        echo "Getting localrun_aes_key's value from pipeline $PIPELINE_ID..."
         echo ""
         echo "PIPELINE_URL=$PIPELINE_URL"
         echo ""
@@ -71,9 +71,9 @@ spec:
         echo ""
 
         # export file to corresponding path
-        EXPORT_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${pipelineId}/runs?localRun=true"
+        EXPORT_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${PIPELINE_ID}/runs?localRun=true"
         FULL_PATH_FILE="$exportPath/$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt"
-        echo "Exporting pipeline $pipelineId to $FULL_PATH_FILE..."
+        echo "Exporting pipeline $PIPELINE_ID to $FULL_PATH_FILE..."
         echo ""
         echo "EXPORT_URL=$EXPORT_URL"
         echo ""
