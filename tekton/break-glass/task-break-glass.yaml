@@ -18,6 +18,12 @@ spec:
     - name: artifactory-repository
       description: |
         the Artifactory repository where export file will be uploaded
+    - name: artifactory-user
+      description: |
+        the Artifactory user
+    - name: artifactory-secret
+      description: |
+        the Artifactory pwd
   workspaces:
     - name: workspace
       mountPath: /artifacts
@@ -34,6 +40,10 @@ spec:
           value: $(params.file-name)
         - name: ARTIFACTORY_REPOSITORY
           value: $(params.artifactory-repository)
+        - name: ARTIFACTORY_USER
+          value: $(params.artifactory-user)
+        - name: ARTIFACTORY_PWD
+          value: $(params.artifactory-secret)
       script: |
         #!/bin/bash
         echo "PIPELINE_ID: $PIPELINE_ID"
@@ -72,7 +82,8 @@ spec:
 
         # export file to corresponding path
         EXPORT_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${PIPELINE_ID}/runs?localRun=true"
-        FULL_PATH_FILE="/artifacts/$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt"
+        EXPORT_FILE_NAME=$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt
+        FULL_PATH_FILE="/artifacts/$EXPORT_FILE_NAME"
         echo "Exporting pipeline $PIPELINE_ID to $FULL_PATH_FILE..."
         echo ""
         echo "EXPORT_URL=$EXPORT_URL"
@@ -82,3 +93,8 @@ spec:
         echo ""
         echo "Done!"
         ls -al /artifacts
+        echo ""
+        echo "Uploading to Artifactory..."
+        EXPORT_URL="$ARTIFACTORY_REPOSITORY/ejd/$EXPORT_FILE_NAME"
+        # TODO - recupérer les variables
+        curl -u ARTIFACTORY_USER:ARTIFACTORY_PWD -X PUT $EXPORT_URL -T $FULL_PATH_FILE
