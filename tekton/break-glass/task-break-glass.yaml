@@ -23,7 +23,7 @@ spec:
       mountPath: /artifacts
   steps:
     - name: fetch-local-run
-      image: ibmcom/pipeline-base-image:$(params.image-version)
+      image: ibmcom/pipeline-base-image:latest
       imagePullPolicy: Always
       env:
         - name: API_KEY
