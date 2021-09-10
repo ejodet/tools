@@ -82,4 +82,4 @@ spec:
         echo ""
         echo "Done!"
         ls -al /artifacts
-        cat FULL_PATH_FILE
+        cat $FULL_PATH_FILE
