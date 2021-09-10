@@ -36,12 +36,49 @@ spec:
           value: $(params.artifactory-repository)
       script: |
         #!/bin/bash
-        set -e -o pipefail
-        echo  "toto!!!!"
-        echo "IBMCLOUD_API_KEY: $IBMCLOUD_API_KEY"
         echo "PIPELINE_ID: $PIPELINE_ID"
         echo "FILE_NAME: $FILE_NAME"
         echo "ARTIFACTORY_REPOSITORY: $ARTIFACTORY_REPOSITORY"
-
+        echo""
+        echo "Login to IBM Cloud...."
         ibmcloud login -a cloud.ibm.com --no-region
-        exit 0
+        echo ""
+
+        # get the bearer token
+        TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r .iam_token)
+        if [[ -z $TOKEN ]]; then
+          echo "Unable to retrieve a bearer token from IBM Cloud: ensure you're logged in before running this script!"
+          echo ""
+          exit 1
+        fi
+
+        # Get AES key
+        PIPELINE_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${pipelineId}"
+        echo "Getting localrun_aes_key's value from pipeline $pipelineId..."
+        echo ""
+        echo "PIPELINE_URL=$PIPELINE_URL"
+        echo ""
+
+        AES_KEY=$(curl --header "Authorization: ${TOKEN}" -X GET ${PIPELINE_URL} | jq '.envProperties[] | select(.name | contains("localrun_aes_key")) | .value' | sed -e 's/^"//' -e 's/"$//')
+        echo ""
+        if [ -z $AES_KEY ]; then
+          echo "Unable to retrieve localrun_aes_key's value. Exiting..."
+          echo ""
+          exit 1
+        else
+          echo "localrun_aes_key's value retrieved..."
+        fi
+        echo ""
+
+        # export file to corresponding path
+        EXPORT_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${pipelineId}/runs?localRun=true"
+        FULL_PATH_FILE="$exportPath/$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt"
+        echo "Exporting pipeline $pipelineId to $FULL_PATH_FILE..."
+        echo ""
+        echo "EXPORT_URL=$EXPORT_URL"
+        echo ""
+        # set params and payload
+        ls -al /artifacts
+        # curl -H "Authorization: ${TOKEN}" -H "Content-Type: application/json" -X POST ${EXPORT_URL} -d '{"triggerName":"Manual CD Trigger","eventParams":{"properties": [{"type": "SECURE","name": "localrun_aes_key","value": "'"${AES_KEY}"'"}]}}' > $FULL_PATH_FILE
+        echo ""
+        echo "Done!"
