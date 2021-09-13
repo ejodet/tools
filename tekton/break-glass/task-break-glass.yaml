@@ -107,4 +107,7 @@ spec:
         echo "Uploading to Artifactory..."
         UPLOAD_URL="$ARTIFACTORY_REPOSITORY/ejd/$EXPORT_FILE_NAME"
         echo "Using upload URL $UPLOAD_URL"
+        echo ""
         curl -H "X-JFrog-Art-Api:$ARTIFACTORY_API_KEY" -X PUT $UPLOAD_URL -T $FULL_PATH_FILE
+        echo ""
+        echo "Done!"
