@@ -10,8 +10,7 @@ spec:
     - name: file-name
       default: localRun
     - name: artifactory-repository
-    - name: artifactory-user
-    - name: artifactory-secret
+    - name: artifactory-api-key
   resourcetemplates:
     # PVC definition like pre-tekton-0.10.1
     - apiVersion: v1
@@ -41,10 +40,8 @@ spec:
             value: $(params.file-name)
           - name: artifactory-repository
             value: $(params.artifactory-repository)
-          - name: artifactory-user
-            value: $(params.artifactory-user)
-          - name: artifactory-secret
-            value: $(params.artifactory-secret)
+          - name: artifactory-api-key
+            value: $(params.artifactory-api-key)
         workspaces:
           - name: pipeline-ws
             persistentVolumeClaim:

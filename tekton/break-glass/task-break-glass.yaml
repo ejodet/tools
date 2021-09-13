@@ -18,12 +18,9 @@ spec:
     - name: artifactory-repository
       description: |
         the Artifactory repository where export file will be uploaded
-    - name: artifactory-user
+    - name: artifactory-api-key
       description: |
-        the Artifactory user
-    - name: artifactory-secret
-      description: |
-        the Artifactory pwd
+        the Artifactory API Key (that has write access to this repository)
   workspaces:
     - name: workspace
       mountPath: /artifacts
@@ -40,21 +37,32 @@ spec:
           value: $(params.file-name)
         - name: ARTIFACTORY_REPOSITORY
           value: $(params.artifactory-repository)
-        - name: ARTIFACTORY_USER
-          value: $(params.artifactory-user)
-        - name: ARTIFACTORY_PWD
-          value: $(params.artifactory-secret)
+        - name: ARTIFACTORY_API_KEY
+          value: $(params.artifactory-api-key)
       script: |
         #!/bin/bash
+
+        # This task enables you to automate the generation of a pipeline export file, that can be used later in break-glass mode.
+        # More on the break-glass mode:
+        # https://github.ibm.com/org-ids/cd-pipeline-kubernetes/tree/master/breakglass
+        # https://pages.github.ibm.com/one-pipeline/docs/#/break-glass?id=quotbreak-glassquot-mode
+        #
+        # The script consists of 4 steps:
+        # 1 - get an IBM bearer token
+        # 2 - get the AES encoding key from the pipeline
+        # 3 - export the pipeline to the /artifacts directory
+        # 4 - upload the file to Artifactory
+        #
+
         echo "PIPELINE_ID: $PIPELINE_ID"
         echo "FILE_NAME: $FILE_NAME"
         echo "ARTIFACTORY_REPOSITORY: $ARTIFACTORY_REPOSITORY"
         echo""
+
+        # 1 - get the bearer token
         echo "Login to IBM Cloud...."
         ibmcloud login -a cloud.ibm.com --no-region
         echo ""
-
-        # get the bearer token
         TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r .iam_token)
         if [[ -z $TOKEN ]]; then
           echo "Unable to retrieve a bearer token from IBM Cloud: ensure you're logged in before running this script!"
@@ -62,7 +70,7 @@ spec:
           exit 1
         fi
 
-        # Get AES key
+        # 2 - get AES key
         PIPELINE_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${PIPELINE_ID}"
         echo "Getting localrun_aes_key's value from pipeline $PIPELINE_ID..."
         echo ""
@@ -80,7 +88,7 @@ spec:
         fi
         echo ""
 
-        # export file to corresponding path
+        # 3 - export pipeline to a file in the corresponding path
         EXPORT_URL="https://devops-api.us-south.devops.cloud.ibm.com/v1/tekton-pipelines/${PIPELINE_ID}/runs?localRun=true"
         EXPORT_FILE_NAME=$FILE_NAME-$(date -d "today" +"%Y%m%d%H%M").txt
         FULL_PATH_FILE="/artifacts/$EXPORT_FILE_NAME"
@@ -94,7 +102,9 @@ spec:
         echo "Done!"
         ls -al /artifacts
         echo ""
+
+        # 4 - Upload to artifactory
         echo "Uploading to Artifactory..."
         UPLOAD_URL="$ARTIFACTORY_REPOSITORY/ejd/$EXPORT_FILE_NAME"
         echo "Using upload URL $UPLOAD_URL"
-        curl -H "X-JFrog-Art-Api:$ARTIFACTORY_PWD" -X PUT $UPLOAD_URL -T $FULL_PATH_FILE
+        curl -H "X-JFrog-Art-Api:$ARTIFACTORY_API_KEY" -X PUT $UPLOAD_URL -T $FULL_PATH_FILE

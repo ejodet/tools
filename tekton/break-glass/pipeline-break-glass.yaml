@@ -9,8 +9,7 @@ spec:
     - name: pipeline-id
     - name: file-name
     - name: artifactory-repository
-    - name: artifactory-user
-    - name: artifactory-secret
+    - name: artifactory-api-key
   workspaces:
     - name: pipeline-ws
   tasks:
@@ -26,10 +25,8 @@ spec:
           value: $(params.file-name)
         - name: artifactory-repository
           value: $(params.artifactory-repository)
-        - name: artifactory-user
-          value: $(params.artifactory-user)
-        - name: artifactory-secret
-          value: $(params.artifactory-secret)
+        - name: artifactory-api-key
+          value: $(params.artifactory-api-key)
       workspaces:
         - name: workspace
           workspace: pipeline-ws
